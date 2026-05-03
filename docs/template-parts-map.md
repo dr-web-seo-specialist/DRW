@@ -1,5 +1,5 @@
 # Dr.Web Lawyer — Mappa template-parts + Note per Claude
-**Versione:** 2026-05-03 rev.2
+**Versione:** 2026-05-03 rev.3
 **Cartella:** `/template-parts` (child theme)
 **Fonte:** analisi diretta dei sorgenti inviati da Luigi
 
@@ -124,6 +124,18 @@ drw_render_testimonianza_card( $post_id ); // definita in inc/testimonianze-temp
 | 2 | `card-testimonianza.php` | ✅ Decisione architetturale | **`tipologia-cliente` rinviata a Fase 2** — decisione Luigi 2026-05-03. Tassonomia valida, non urgente per v1.0. Il blocco badge è innocuo senza registrazione. Implementare in Fase 2 (vedi sezione tassonomia sopra). | Alta | ✅ **Chiusa** |
 | 3 | `card-testimonianza.php` | ✅ Decisione design | **Thumbnail provvisoria — gestire con costante PHP configurabile.** Decisione Luigi 2026-05-03. Implementare `define('DRW_TESTIMONIANZA_THUMB_SIZE', 80)` in `functions.php` + `add_image_size('drw-testimonianza-thumb', 80, 80, true)`. Il partial legge la costante con fallback a 64. Uno studio di design che acquista il template cambia una sola riga. | Alta | ✅ **Chiusa — da implementare** |
 | 4 | `card-testimonianza.php` | 🔵 Futuro | `data-post-id` pronto per JS — decidere se/quando implementare interazioni (modal, lazy load) | Bassa | ⏳ Aperta |
+
+---
+
+## Note cartelle speciali
+
+### `languages/` — vuota (atteso)
+- Il text domain `drw-lawyer` è già usato correttamente in tutto il codice (`esc_html_e`, `__()`, ecc.)
+- I file `.po` / `.mo` non sono ancora stati generati — è corretto per questa fase
+- **Flusso i18n per Fase EN (da Claude):** primo step è `xgettext` o `WP-CLI i18n make-pot` per estrarre tutte le stringhe con text domain `drw-lawyer` e generare il file `.pot` base. Da gestire quando si apre la Fase internazionalizzazione.
+
+### `page-templates/` — vuota (atteso)
+- I page template risiedono nella root del child theme (`page-contatti.php`, `page-landing.php`, ecc.) — scelta architetturale deliberata, coerente con il progetto.
 
 ---
 
