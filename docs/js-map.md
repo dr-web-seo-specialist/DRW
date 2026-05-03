@@ -1,22 +1,22 @@
 # Dr.Web Lawyer — Mappa JS completa + Note per Claude
 **Versione:** 2026-05-03  
 **Cartella:** `/js` (child theme)  
-**File totali:** 6  
+**File totali:** 7  
 **Fonte:** analisi diretta dei sorgenti inviati da Luigi
 
 ---
 
 ## Mappa file `/js`
 
-| File | Dim. approx | Scope | Dipendenze | Stato |
-|------|-------------|-------|------------|-------|
-| `global.js` | ~5 KB | Namespace `DrwLawyer`, back-to-top, header scroll, skip link | Nessuna (vanilla) | ✅ Stabile |
-| `counters.js` | ~3 KB | Animazione circle counter + 4 linear counters | Nessuna (vanilla) | ✅ Stabile |
-| `justice.js` | ~1 KB | Scroll reveal `.drw-justice` via IntersectionObserver | Nessuna (vanilla) | ✅ Stabile |
-| `statue.js` | ~7 KB | Hotspot, flip card, typewriter, video lightbox, panel slide-in | Nessuna (vanilla) | ✅ Stabile |
-| `timeline.js` | ~4 KB | Progress bar timeline + attivazione righe | Nessuna (vanilla) | ✅ Stabile |
-| `drw-demo-switcher.js` | ~3 KB | Switcher palette demo (solo sviluppo) | Nessuna (vanilla) | ⚠️ Solo demo |
-| `custom.js` | 0 B | File vuoto — placeholder per customizzazioni client | — | 🔵 Vuoto |
+| File | Dim. reale | Modificato | Scope | Dipendenze | Stato |
+|------|-----------|------------|-------|------------|-------|
+| `global.js` | 8.0 KB | 09/Apr/2026 | Namespace `DrwLawyer`, back-to-top, header scroll, skip link | Nessuna (vanilla) | ✅ Stabile |
+| `counters.js` | 3.3 KB | 21/Mar/2026 | Animazione circle counter + 4 linear counters | Nessuna (vanilla) | ✅ Stabile |
+| `justice.js` | 846 B | 13/Apr/2026 | Scroll reveal `.drw-justice` via IntersectionObserver | Nessuna (vanilla) | ✅ Stabile |
+| `statue.js` | 8.1 KB | 07/Apr/2026 | Hotspot, flip card, typewriter, video lightbox, panel slide-in | Nessuna (vanilla) | ✅ Stabile |
+| `timeline.js` | 4.5 KB | 07/Apr/2026 | Progress bar timeline + attivazione righe | Nessuna (vanilla) | ✅ Stabile |
+| `drw-demo-switcher.js` | 4.9 KB | 09/Apr/2026 | Switcher palette demo (solo sviluppo) | Nessuna (vanilla) | ⚠️ Solo demo |
+| `custom.js` | 28 B | 02/Mar/2026 | Placeholder per customizzazioni client | — | 🔵 Quasi vuoto |
 
 ---
 
@@ -181,7 +181,7 @@ data-target=".selector-sezione"
 ### `custom.js`
 **Responsabilità:** placeholder per customizzazioni specifiche del cliente.
 
-- File attualmente **vuoto**.
+- File attualmente quasi vuoto (28 B).
 - Enqueuato in `functions.php` — non rimuovere l'enqueue anche se vuoto.
 
 **Note per Claude:**
