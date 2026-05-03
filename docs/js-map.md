@@ -192,13 +192,13 @@ data-target=".selector-sezione"
 
 ## Issues aperte (da discutere con Luigi)
 
-| # | File | Tipo | Descrizione | Priorità |
-|---|------|------|-------------|----------|
-| 1 | `drw-demo-switcher.js` | 🔴 Cleanup deploy | Rimuovere/disabilitare prima del lancio (coordinare con `global.css`) | Alta |
+| # | File/i | Tipo | Descrizione | Priorità |
+|---|--------|------|-------------|----------|
+| 1 | `drw-demo-switcher.js` + `global.css` + `functions.php` | 🔴 Cleanup deploy | **Operazione coordinata unica:** rimuovere/disabilitare tutti e tre in una sola sessione. Non in momenti separati: rischio di lasciare un pezzo attivo in produzione. Sequenza: 1) disabilitare enqueue in `functions.php`, 2) rimuovere blocco switcher da `global.css`, 3) archiviare `drw-demo-switcher.js`. | Alta |
 | 2 | `statue.js` | 🟡 Cleanup | `console.log` debug da rimuovere prima del deploy | Media |
 | 3 | `timeline.js` | 🟡 Cleanup | `console.warn` da rimuovere o condizionare a flag debug | Media |
 | 4 | `global.js` | 🟡 TODO Fase 2 | `initColorSchemeSwitcher()` — logica localStorage commentata, da attivare in Fase 2 | Media |
-| 5 | `global.js` | 🔵 TODO futuro | `navigation.js` da creare per hamburger mobile, aria-expanded, ESC dropdown | Bassa |
+| 5 | `global.js` | 🔵 TODO futuro | `navigation.js` da creare per hamburger mobile, aria-expanded, ESC dropdown — **discutere naming e struttura IIFE con Luigi prima di scrivere una riga** | Bassa |
 | 6 | `timeline.js` | 🔵 Performance | Doppio listener `resize` senza debounce — valutare se necessario | Bassa |
 
 ---
