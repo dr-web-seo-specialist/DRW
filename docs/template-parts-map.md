@@ -100,20 +100,21 @@ drw_render_testimonianza_card( $post_id ); // definita in inc/testimonianze-temp
 **Note per Claude:**
 - Il guard iniziale `if ( empty( $post_id ) || empty( $fields ) || ! is_array( $fields ) ) { return; }` è la protezione principale contro chiamate errate. Non rimuovere.
 - `wp_kses_post( $testo )` su `testo_testimonianza`: il campo ACF può contenere HTML (es. grassetto, corsivo). Se il campo viene cambiato a plain text, sostituire con `esc_html()`.
-- La tassonomia è `tipologia-cliente` (slug con trattino). Verificare che corrisponda allo slug registrato in `functions.php` / `inc/`. Se la tassonomia non esiste, `get_the_terms()` restituisce `false` — il controllo `! is_wp_error( $tipologie )` non copre `false`. Aggiungere `&& $tipologie !== false` se necessario (o è già garantito da `inc/`?).
-- `img` ha `width="64" height="64"` hardcodati. Se la dimensione thumbnail cambia nel design, aggiornare entrambi gli attributi per evitare CLS (Cumulative Layout Shift).
+- La tassonomia è `tipologia-cliente` (slug con trattino). Verificare che corrisponda allo slug registrato in `functions.php` / `inc/`.
+- `img` ha `width="64" height="64"` hardcodati — vedi issue #3 sotto.
 - Ruolo e città sono concatenati con ` — ` via `implode`. Se entrambi vuoti, `array_filter` restituisce array vuoto e il blocco non viene renderizzato — comportamento corretto.
 - `data-post-id` sull'`<article>` è disponibile per JS futuro (es. lazy load contenuto esteso, carousel, modal). Non ha logica JS attuale — placeholder intenzionale.
 
 ---
 
-## Issues aperte (da discutere con Luigi)
+## Issues aperte — decisioni richieste a Luigi
 
-| # | File | Tipo | Descrizione | Priorità |
-|---|------|------|-------------|----------|
-| 1 | `no-results.php` | 🟡 Hardcoded slug | `/contatti/` hardcodato — valutare Customizer option `drw_contatti_url` per flessibilità multi-cliente | Media |
-| 2 | `card-testimonianza.php` | 🟡 Bug potenziale | `get_the_terms()` può restituire `false` (tassonomia non registrata) oltre a `WP_Error` — il controllo attuale copre solo `WP_Error`. Aggiungere `&& $tipologie !== false`? | Media |
-| 3 | `card-testimonianza.php` | 🔵 Futuro | `data-post-id` pronto per JS — decidere se/quando implementare interazioni (modal, lazy load) | Bassa |
+| # | File | Tipo | Descrizione | Priorità | Stato |
+|---|------|------|-------------|----------|-------|
+| 1 | `no-results.php` | 🟡 Hardcoded slug | `/contatti/` hardcodato — valutare Customizer option `drw_contatti_url` per flessibilità multi-cliente | Media | ⏳ Aperta |
+| 2 | `card-testimonianza.php` | 🔴 Decisione architetturale | **`tipologia-cliente` è una tassonomia prevista nel progetto o un residuo?** Se è nei CPT approvati: aggiungere `&& $tipologie !== false` al controllo esistente (una riga). Se non è prevista: rimuovere l'intero blocco badge, non patcharlo. Claude non interviene prima della risposta di Luigi. | Alta | ⏳ **Attende Luigi** |
+| 3 | `card-testimonianza.php` | 🔴 Decisione design | **La thumbnail testimonianza rimarrà 64×64px o potrebbe cambiare?** Se definitiva: aggiungere `add_image_size('drw-testimonianza-thumb', 64, 64, true)` in `functions.php` e usare la dimensione nominale nel markup. Se provvisoria: lasciare i valori inline e tornare dopo. Claude non interviene prima della risposta di Luigi. | Alta | ⏳ **Attende Luigi** |
+| 4 | `card-testimonianza.php` | 🔵 Futuro | `data-post-id` pronto per JS — decidere se/quando implementare interazioni (modal, lazy load) | Bassa | ⏳ Aperta |
 
 ---
 
@@ -126,5 +127,5 @@ drw_render_testimonianza_card( $post_id ); // definita in inc/testimonianze-temp
 | `no-results.php` | `global.css` → `.drw-label`, `.drw-label--accent` | Classi label devono esistere |
 | `card-testimonianza.php` | `inc/testimonianze-template.php` → `drw_render_testimonianza_card()` | Funzione wrapper obbligatoria per uso sicuro |
 | `card-testimonianza.php` | ACF Free → campi del gruppo Testimonianza | Se i field key cambiano, aggiornare le chiavi in questo partial |
-| `card-testimonianza.php` | Tassonomia `tipologia-cliente` registrata in `inc/` | Se lo slug cambia, aggiornare `get_the_terms()` |
+| `card-testimonianza.php` | Tassonomia `tipologia-cliente` registrata in `inc/` | **Vedi issue #2** — stato da confermare |
 | `card-testimonianza.php` | CSS del child theme → tutte le classi `.drw-testimonianza-card__*` e `.drw-badge` | Classi BEM devono essere definite nel CSS |
