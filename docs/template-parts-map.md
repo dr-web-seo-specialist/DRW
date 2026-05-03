@@ -1,5 +1,5 @@
 # Dr.Web Lawyer — Mappa template-parts + Note per Claude
-**Versione:** 2026-05-03
+**Versione:** 2026-05-03 rev.2
 **Cartella:** `/template-parts` (child theme)
 **Fonte:** analisi diretta dei sorgenti inviati da Luigi
 
@@ -70,9 +70,18 @@ drw_render_testimonianza_card( $post_id ); // definita in inc/testimonianze-temp
 | `testo_testimonianza` | `''` | Testo blockquote |
 | `valutazione_stelle` | `0` | Intero 1–5 (0 = non mostrare stelle) |
 
-**Tassonomia:**
-- `tipologia-cliente` — letta con `get_the_terms( $post_id, 'tipologia-cliente' )`
+**Tassonomia `tipologia-cliente`:**
+- Letta con `get_the_terms( $post_id, 'tipologia-cliente' )`
 - Ogni termine → badge `.drw-badge`
+- **Stato: RINVIATA A FASE 2** (decisione Luigi 2026-05-03)
+
+> **Rationale approvato:** La tassonomia è concettualmente valida e coerente con l'architettura multi-vertical (avvocati, commercialisti, notai, medici). Permette agli studi di classificare le testimonianze per tipo di cliente (Privato, Azienda, Startup, Famiglia, ecc.) e potenzialmente integrarsi con archivi clienti esterni (Excel, CRM). Non è urgente per v1.0 — il codice nel partial è già pronto e innocuo finché la tassonomia non viene registrata (`get_the_terms()` restituisce `false`, il blocco badge non viene renderizzato). Si registra in Fase 2 insieme alle altre funzionalità avanzate.
+
+**Quando si implementa in Fase 2:**
+1. Aggiungere `register_taxonomy( 'tipologia-cliente', 'testimonianza', [...] )` in `inc/` (file da definire)
+2. Aggiungere `&& $tipologie !== false` al controllo esistente in `card-testimonianza.php`
+3. Definire i termini di vocabolario chiuso in `03Tassonomie-core` e promuoverli in Drive
+4. Aggiungere le classi `.drw-badge` al CSS se non già presenti
 
 **Logica immagine (priorità):**
 1. `cliente_foto['url']` (ACF) — usa anche `cliente_foto['alt']` se presente
@@ -100,20 +109,20 @@ drw_render_testimonianza_card( $post_id ); // definita in inc/testimonianze-temp
 **Note per Claude:**
 - Il guard iniziale `if ( empty( $post_id ) || empty( $fields ) || ! is_array( $fields ) ) { return; }` è la protezione principale contro chiamate errate. Non rimuovere.
 - `wp_kses_post( $testo )` su `testo_testimonianza`: il campo ACF può contenere HTML (es. grassetto, corsivo). Se il campo viene cambiato a plain text, sostituire con `esc_html()`.
-- La tassonomia è `tipologia-cliente` (slug con trattino). Verificare che corrisponda allo slug registrato in `functions.php` / `inc/`.
-- `img` ha `width="64" height="64"` hardcodati — vedi issue #3 sotto.
+- La tassonomia `tipologia-cliente` (slug con trattino) è **rinviata a Fase 2** — vedi sezione sopra. Il codice nel partial è già pronto, NON modificare finché la tassonomia non viene registrata.
+- `img` ha dimensioni gestite tramite costante PHP — vedi issue #3 (chiusa) sotto.
 - Ruolo e città sono concatenati con ` — ` via `implode`. Se entrambi vuoti, `array_filter` restituisce array vuoto e il blocco non viene renderizzato — comportamento corretto.
 - `data-post-id` sull'`<article>` è disponibile per JS futuro (es. lazy load contenuto esteso, carousel, modal). Non ha logica JS attuale — placeholder intenzionale.
 
 ---
 
-## Issues aperte — decisioni richieste a Luigi
+## Issues — stato
 
 | # | File | Tipo | Descrizione | Priorità | Stato |
 |---|------|------|-------------|----------|-------|
 | 1 | `no-results.php` | 🟡 Hardcoded slug | `/contatti/` hardcodato — valutare Customizer option `drw_contatti_url` per flessibilità multi-cliente | Media | ⏳ Aperta |
-| 2 | `card-testimonianza.php` | 🔴 Decisione architetturale | **`tipologia-cliente` è una tassonomia prevista nel progetto o un residuo?** Se è nei CPT approvati: aggiungere `&& $tipologie !== false` al controllo esistente (una riga). Se non è prevista: rimuovere l'intero blocco badge, non patcharlo. Claude non interviene prima della risposta di Luigi. | Alta | ⏳ **Attende Luigi** |
-| 3 | `card-testimonianza.php` | 🔴 Decisione design | **La thumbnail testimonianza rimarrà 64×64px o potrebbe cambiare?** Se definitiva: aggiungere `add_image_size('drw-testimonianza-thumb', 64, 64, true)` in `functions.php` e usare la dimensione nominale nel markup. Se provvisoria: lasciare i valori inline e tornare dopo. Claude non interviene prima della risposta di Luigi. | Alta | ⏳ **Attende Luigi** |
+| 2 | `card-testimonianza.php` | ✅ Decisione architetturale | **`tipologia-cliente` rinviata a Fase 2** — decisione Luigi 2026-05-03. Tassonomia valida, non urgente per v1.0. Il blocco badge è innocuo senza registrazione. Implementare in Fase 2 (vedi sezione tassonomia sopra). | Alta | ✅ **Chiusa** |
+| 3 | `card-testimonianza.php` | ✅ Decisione design | **Thumbnail provvisoria — gestire con costante PHP configurabile.** Decisione Luigi 2026-05-03. Implementare `define('DRW_TESTIMONIANZA_THUMB_SIZE', 80)` in `functions.php` + `add_image_size('drw-testimonianza-thumb', 80, 80, true)`. Il partial legge la costante con fallback a 64. Uno studio di design che acquista il template cambia una sola riga. | Alta | ✅ **Chiusa — da implementare** |
 | 4 | `card-testimonianza.php` | 🔵 Futuro | `data-post-id` pronto per JS — decidere se/quando implementare interazioni (modal, lazy load) | Bassa | ⏳ Aperta |
 
 ---
@@ -127,5 +136,6 @@ drw_render_testimonianza_card( $post_id ); // definita in inc/testimonianze-temp
 | `no-results.php` | `global.css` → `.drw-label`, `.drw-label--accent` | Classi label devono esistere |
 | `card-testimonianza.php` | `inc/testimonianze-template.php` → `drw_render_testimonianza_card()` | Funzione wrapper obbligatoria per uso sicuro |
 | `card-testimonianza.php` | ACF Free → campi del gruppo Testimonianza | Se i field key cambiano, aggiornare le chiavi in questo partial |
-| `card-testimonianza.php` | Tassonomia `tipologia-cliente` registrata in `inc/` | **Vedi issue #2** — stato da confermare |
+| `card-testimonianza.php` | Tassonomia `tipologia-cliente` | **Fase 2** — rinviata, il partial è già pronto |
+| `card-testimonianza.php` | `functions.php` → costante `DRW_TESTIMONIANZA_THUMB_SIZE` | Da implementare — vedi issue #3 chiusa |
 | `card-testimonianza.php` | CSS del child theme → tutte le classi `.drw-testimonianza-card__*` e `.drw-badge` | Classi BEM devono essere definite nel CSS |
