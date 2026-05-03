@@ -1,5 +1,5 @@
 # FILE-MAP — Dr.Web Lawyer Child Theme
-> Fotografia: 3 maggio 2026 — v1.2
+> Fotografia: 3 maggio 2026 — v1.3
 > Source of truth: documenti Google Drive (00_MASTER, INDEX_DRIVE, snapshot 15/Apr/2026).
 > Aggiornare questo file ogni volta che si aggiunge/rimuove/rinomina un file nel child theme.
 
@@ -42,7 +42,7 @@ drw-lawyer-child/
 │   ├── customizer.php          ⭐ WP Customizer: palette, tipografia, identità, switcher
 │   ├── testimonianze-template.php  # Query + rendering CPT Testimonianze
 │   ├── shortcodes-testimonianze.php # Shortcode [drw_testimonianza] / [drw_testimonianze]
-│   └── demo-switcher.php       # Switcher demo palette — solo uso interno preview
+│   └── demo-switcher.php       # Render widget footer switcher palette — solo uso interno preview
 ├── js/
 │   ├── global.js               ⭐ Namespace DrwLawyer: back-to-top, sticky, nav
 │   ├── statue.js               ⭐ Animazioni statua + hotspot interattivi
@@ -134,6 +134,8 @@ drw-lawyer-child/
 | `single-sedi.php` | 2.6 KB | Sede | `DRW_CPT_LOCATIONS` |
 | `single-testimonianza.php` | 939 B | Testimonianza — **no archivio pubblico** | `DRW_CPT_TESTIMONIALS` |
 
+> ⚠️ **NOTA `single-testimonianza.php`**: La dimensione di 939 B suggerisce un file stub/redirect. Se un utente raggiunge direttamente `/testimonianze/{slug}/`, verificare che il template restituisca un redirect a 301 verso la pagina "Dicono di noi" oppure un 404 — **non** una pagina vuota. Vedere TODO-CLAUDE.
+
 ### Taxonomy
 
 | File | Dim. | Slug tassonomia |
@@ -145,15 +147,17 @@ drw-lawyer-child/
 
 ## CARTELLA `inc/` — Logica PHP modulare
 
+> Directory listing confermata al 15/Apr/2026 — 10 file, nessun file extra non documentato.
+
 | File | Dim. | Ruolo | Note critiche |
 |------|------|-------|---------------|
-| `custom-post-types.php` | 14.1 KB | Registra CPT con costanti `DRW_CPT_*` | Mai hardcodare slug altrove. Vedere analisi dettagliata sotto. |
+| `custom-post-types.php` | 14.1 KB | Registra CPT con costanti `DRW_CPT_*` | Mai hardcodare slug altrove. Analisi dettagliata sotto. |
 | `taxonomies.php` | 6.2 KB | Registra 3 tassonomie: `area-pratica`, `tipologia-caso`, `tipologia-cliente` | ⚠️ BUG: 2 CPT collegati con slug hardcoded invece di costanti — vedere TODO-CLAUDE |
 | `enqueue.php` | 9.6 KB ⭐ | Nodo centrale enqueue CSS/JS. Caricamento condizionale per moduli. | Aggiornato 15/Apr |
 | `helpers.php` | 10.3 KB ⭐ | `drwstudio` = unico access point ai dati studio | Regola permanente: mai query dirette |
 | `options.php` | 39.8 KB ⭐⭐ | Pagina "Impostazioni Studio" con field group ACF Free | ACF Free only. File più grande del tema. |
 | `schema.php` | 34.3 KB ⭐⭐ | JSON-LD: LegalService, Review, AggregateRating. Pattern builder modulare. | Legge da `options.php` via `drw_get_settings_page_id()`. Allineato a `05_Schema.org` |
-| `customizer.php` | 19.5 KB ⭐ | WP Customizer: palette, tipografia, identità visiva, demo switcher | Vedere analisi dettagliata sotto |
+| `customizer.php` | 19.5 KB ⭐ | WP Customizer: palette, tipografia, identità visiva, demo switcher | Analisi dettagliata sotto |
 | `testimonianze-template.php` | 9.8 KB | Query flessibile + rendering HTML CPT Testimonianze | Dipende da `template-parts/testimonianze/card-testimonianza.php` |
 | `shortcodes-testimonianze.php` | 4.1 KB | Shortcode `[drw_testimonianza]` e `[drw_testimonianze]` | Dipende da `testimonianze-template.php` |
 | `demo-switcher.php` | 1.2 KB | Render widget footer switcher palette demo | ⚠️ Contiene commenti HTML di debug — rimuovere prima di v1.0 |
@@ -161,6 +165,17 @@ drw-lawyer-child/
 ---
 
 ### `inc/custom-post-types.php` — Analisi dettagliata
+
+**Ultima modifica:** 11/Mar/2026 — **Dimensione:** 14.1 KB
+
+#### Architettura
+
+Il file usa un pattern **"costanti → hook → registrazione"**:
+1. Definisce le 5 costanti `DRW_CPT_*` in cima (con guard `if ( ! defined(...) )`)
+2. Hooktail unico `add_action( 'init', 'drw_register_cpts' )`
+3. `drw_register_cpts()` chiama le 5 funzioni di registrazione in sequenza
+
+Le label sono in italiano e usano `_x()` / `__()` con text-domain `'drw-lawyer'`, pronti per la traduzione.
 
 #### Costanti slug CPT (definite qui, usate in tutto il tema)
 
@@ -172,21 +187,33 @@ drw-lawyer-child/
 | `DRW_CPT_LOCATIONS` | `'sedi'` | Sedi / Uffici |
 | `DRW_CPT_TESTIMONIALS` | `'testimonianze'` | Testimonianze / Social proof |
 
-> ⚠️ **TASK PRE-v1.0 — VERIFICA SLUG**: Gli slug attuali (`avvocati`, `aree`, `casi`, `sedi`, `testimonianze`) sono in **italiano**. Per il mercato anglosassone (US, UK, AU) e per la neutralità verticali vanno valutati. Decisione da prendere **prima della traduzione EN** — modificare gli slug dopo l'indicizzazione Google comporta redirect 301 obbligatori.
+> ⚠️ **TASK PRE-v1.0 — VERIFICA SLUG**: Gli slug attuali sono in **italiano**. Per mercato anglosassone (US, UK, AU) e per la neutralità verticali vanno valutati. Decisione da prendere **prima della traduzione EN** — modificare gli slug dopo l'indicizzazione Google comporta redirect 301 obbligatori. Vedere TODO-CLAUDE.
 
 #### CPT registrati
 
 | CPT | Slug rewrite | Archive | has_archive | exclude_from_search | show_in_nav_menus | Supports |
-|-----|-------------|---------|-------------|--------------------|--------------------|---------|
+|-----|-------------|---------|-------------|--------------------|--------------------|---------| 
 | Professionisti | `avvocati` | ✅ `/avvocati/` | `true` | — | — | title, editor, thumbnail, excerpt, revisions |
 | Aree/Servizi | `aree` | ✅ `/aree/` | `true` | — | — | title, editor, thumbnail, excerpt, revisions |
 | Casi | `casi` | ✅ `/casi/` | `true` | — | — | title, editor, thumbnail, excerpt, revisions |
 | Sedi | `sedi` | ✅ `/sedi/` | `true` | — | — | title, editor, thumbnail, excerpt, revisions |
 | Testimonianze | `testimonianze` | ❌ No archivio | `false` | `true` | `false` | title, editor, thumbnail |
 
-> 📌 **NOTE SEDI**: Il CPT Sedi è predisposto per NAP (Name/Address/Phone), mappa integrata e relazioni con avvocati/aree. Le relazioni (sede ↔ avvocati, sede ↔ aree) sono ancora da implementare via tassonomie o ACF.
+#### Note aggiuntive per i singoli CPT
 
-> 📌 **NOTE TESTIMONIANZE**: Accessibili solo via shortcode `[drw_testimonianze]` / `[drw_testimonianza id="X"]` o funzione `drw_get_testimonianze()`. Non compaiono in ricerca, nav menu o archivio pubblico.
+**CPT Sedi** (`DRW_CPT_LOCATIONS`):
+- Predisposto per NAP (Name/Address/Phone) e mappa integrata
+- Le relazioni (sede ↔ avvocati, sede ↔ aree) **non sono ancora implementate** — da fare via tassonomie o ACF
+- `menu_position: 8` — separato chiaramente dai CPT core (5–8)
+
+**CPT Testimonianze** (`DRW_CPT_TESTIMONIALS`):
+- `has_archive = false` → nessuna pagina archivio pubblica
+- `exclude_from_search = true` → non appare nella ricerca interna WP
+- `show_in_nav_menus = false` → non selezionabile nei menu dall'editor
+- Accessibili **solo** via shortcode `[drw_testimonianze]` / `[drw_testimonianza id="X"]` o funzione `drw_get_testimonianze()`
+- `menu_position: 26` — nel range libero 25+, separato visivamente dai CPT core
+
+> ⚠️ **NOTA ARCHITETTURALE — Testimonianze `public: true`**: Il CPT ha `public: true` ma `has_archive: false` e `exclude_from_search: true`. Le URL `/testimonianze/{slug}/` sono tecnicamente accessibili se un utente conosce lo slug diretto. Verificare che `single-testimonianza.php` gestisca questo caso con redirect 301 verso la pagina "Dicono di noi" (o 404) — vedere TODO-CLAUDE.
 
 ---
 
@@ -291,7 +318,7 @@ Pattern builder modulare. Hook: `wp_head` priority 20. Ogni entità Schema.org h
 Registra **15 custom properties CSS** via `wp_head` (priority 5, id `drw-customizer-vars`):
 
 | Gruppo | Variabili CSS | Default |
-|--------|--------------|---------|
+|--------|--------------|---------| 
 | Primario (navy) | `--drw-navy`, `--drw-navy-light`, `--drw-navy-dark` | `#1A1F3C`, `#2A2F56`, `#11162B` |
 | Accent (oro) | `--drw-gold`, `--drw-gold-light`, `--drw-gold-dark` | `#C9A96E`, `#E2C99A`, `#A8843E` |
 | Testo | `--drw-text`, `--drw-text-light` | `#2C2C2C`, `#6B7280` |
@@ -357,8 +384,8 @@ Hook: `wp_footer` priority 20. Render condizionato da `drw_is_switcher_enabled()
 
 ### 🔴 BUG — `inc/taxonomies.php`: slug CPT hardcoded invece di costanti
 
-**File:** `inc/taxonomies.php`
-**Funzioni:** `drw_register_tax_area_pratica()` e `drw_register_tax_tipologia_caso()`
+**File:** `inc/taxonomies.php`  
+**Funzioni:** `drw_register_tax_area_pratica()` e `drw_register_tax_tipologia_caso()`  
 **Problema:** I CPT collegati alle tassonomie sono passati come stringhe letterali, violando la regola "costanti CPT generiche":
 
 ```php
@@ -377,85 +404,98 @@ register_taxonomy( 'area-pratica', DRW_CPT_PROFESSIONALS, $args );
 register_taxonomy( 'tipologia-caso', DRW_CPT_CASES, $args );
 ```
 
-**Impatto:** Se le costanti `DRW_CPT_PROFESSIONALS` o `DRW_CPT_CASES` vengono modificate (es. per verticale non-avvocati), le tassonomie si scollegano dai CPT in silenzio senza errore PHP visibile.
+**Impatto:** Se le costanti `DRW_CPT_PROFESSIONALS` o `DRW_CPT_CASES` vengono modificate (es. per verticale non-avvocati), le tassonomie si scollegano dai CPT in silenzio senza errore PHP visibile.  
 **Priorità:** 🔴 Alta — da correggere prima di qualsiasi deploy su verticale non-avvocati.
+
+---
+
+### 🔴 VERIFICA URGENTE — `single-testimonianza.php`: gestione accesso diretto URL
+
+**File:** `single-testimonianza.php`  
+**Problema:** Il CPT Testimonianze ha `public: true` (necessario per le URL singole) ma `has_archive: false` e `exclude_from_search: true`. Un utente che conosca o indovini uno slug `/testimonianze/{slug}/` può accedere direttamente alla pagina singola. Con soli 939 B il file è probabilmente un stub.  
+**Azione richiesta:** Verificare il contenuto del file e garantire che gestisca questo caso con:
+- **Opzione A** (consigliata): redirect 301 verso la pagina "Dicono di noi" (`wp_redirect( get_page_link(...), 301 )`)
+- **Opzione B**: output standard del template ma con tag `<meta name="robots" content="noindex">` nell'`<head>`
+- **Opzione C** (minima): nessun cambiamento, ma documentare la scelta
+
+**Priorità:** 🔴 Alta — impatta SEO e UX se la pagina è accessibile ma vuota/non strutturata.
 
 ---
 
 ### 🟡 TODO aperto — `inc/schema.php`: `jobTitle` avvocati non emesso
 
-**File:** `inc/schema.php`
-**Funzione:** `drw_schema_build_employees()`
+**File:** `inc/schema.php`  
+**Funzione:** `drw_schema_build_employees()`  
 **Problema:** Il campo `jobTitle` nella proprietà `employee[]` del LegalService è commentato:
 ```php
 // TODO: jobTitle da campo ACF _drw_ruolo quando definito.
 // $ruolo = get_post_meta( $post_id, '_drw_ruolo', true );
 // if ( $ruolo ) { $person['jobTitle'] = $ruolo; }
 ```
-**Azione richiesta:** Definire il campo ACF `_drw_ruolo` nel field group "Dettagli Avvocato" in `inc/options.php`, poi decommentare le 3 righe in `schema.php`.
+**Azione richiesta:** Definire il campo ACF `_drw_ruolo` nel field group "Dettagli Avvocato" in `inc/options.php`, poi decommentare le 3 righe in `schema.php`.  
 **Priorità:** 🟡 Media — impatta la qualità del markup strutturato Person.
 
 ---
 
 ### 🟡 TODO aperto — `inc/schema.php`: NAP sedi non emesso
 
-**File:** `inc/schema.php`
-**Funzione:** `drw_schema_build_legal_service()` — blocco sedi multiple
+**File:** `inc/schema.php`  
+**Funzione:** `drw_schema_build_legal_service()` — blocco sedi multiple  
 **Problema:** Le sedi vengono incluse nel LegalService come `LocalBusiness` con solo `name` e `url`, senza NAP specifico per sede:
 ```php
 // TODO: aggiungere NAP specifico sede quando i campi ACF Sedi saranno definiti.
 ```
-**Azione richiesta:** Definire i campi ACF per CPT Sedi in `inc/options.php` (indirizzo, telefono, coordinate), poi espandere il blocco `location[]` in `schema.php`.
+**Azione richiesta:** Definire i campi ACF per CPT Sedi in `inc/options.php` (indirizzo, telefono, coordinate), poi espandere il blocco `location[]` in `schema.php`.  
 **Priorità:** 🟡 Media — rilevante per Local SEO multi-sede.
 
 ---
 
 ### 🟡 TODO aperto — `inc/schema.php`: slug pagina "Dicono di noi" da verificare
 
-**File:** `inc/schema.php`
-**Funzione:** `drw_schema_output()`
+**File:** `inc/schema.php`  
+**Funzione:** `drw_schema_output()`  
 **Problema:**
 ```php
 } elseif ( is_page( 'dicono-di-noi' ) ) {
     // TODO: verificare slug definitivo pagina "Dicono di noi"
 ```
-**Azione richiesta:** Quando la pagina "Dicono di noi" viene creata in WordPress, verificare che lo slug corrisponda a `dicono-di-noi` o aggiornare l'argomento di `is_page()`.
+**Azione richiesta:** Quando la pagina "Dicono di noi" viene creata in WordPress, verificare che lo slug corrisponda a `dicono-di-noi` o aggiornare l'argomento di `is_page()`.  
 **Priorità:** 🟡 Media — non blocca nulla finché la pagina non esiste.
 
 ---
 
 ### 🟡 TODO aperto — `inc/schema.php`: BreadcrumbList su single-testimonianza
 
-**File:** `inc/schema.php`
-**Funzione:** `drw_schema_output()` — blocco `is_singular( DRW_CPT_TESTIMONIALS )`
+**File:** `inc/schema.php`  
+**Funzione:** `drw_schema_output()` — blocco `is_singular( DRW_CPT_TESTIMONIALS )`  
 **Problema:** La BreadcrumbList per la pagina singola Testimonianza non è implementata:
 ```php
 // TODO: aggiungere BreadcrumbList quando la struttura di navigazione
 //       delle Testimonianze sarà definita (es. Home > Dicono di noi > [nome]).
 ```
-**Azione richiesta:** Aggiungere `drw_schema_build_breadcrumb_testimonianza()` e richiamarla in `drw_schema_output()` dopo che la struttura di navigazione è confermata.
+**Azione richiesta:** Aggiungere `drw_schema_build_breadcrumb_testimonianza()` e richiamarla in `drw_schema_output()` dopo che la struttura di navigazione è confermata.  
 **Priorità:** 🟢 Bassa — utile per SEO ma non bloccante.
 
 ---
 
 ### 🟢 NOTA TECNICA — `inc/testimonianze-template.php`: limite meta LIKE su Relationship
 
-**File:** `inc/testimonianze-template.php`
-**Funzione:** `drw_get_testimonianze()` — filtri `aree_ids` e `casi_ids`
-**Problema:** Il pattern `compare => 'LIKE'` con `'"ID"'` può produrre falsi positivi se un ID (es. `12`) è contenuto come sottostringa in un altro ID serializzato (es. `"123"`). Non è un bug attuale ma un limite architetturale di ACF Free.
-**Azione richiesta:** Nessuna modifica immediata. Documentare come limite noto. Se il problema si manifesta in produzione, valutare un `meta_query` con boundaries più restrittivi o migrazione a tabella relazionale.
+**File:** `inc/testimonianze-template.php`  
+**Funzione:** `drw_get_testimonianze()` — filtri `aree_ids` e `casi_ids`  
+**Problema:** Il pattern `compare => 'LIKE'` con `'"ID"'` può produrre falsi positivi se un ID (es. `12`) è contenuto come sottostringa in un altro ID serializzato (es. `"123"`). Non è un bug attuale ma un limite architetturale di ACF Free.  
+**Azione richiesta:** Nessuna modifica immediata. Documentare come limite noto. Se il problema si manifesta in produzione, valutare un `meta_query` con boundaries più restrittivi o migrazione a tabella relazionale.  
 **Priorità:** 🟢 Bassa — solo documentazione.
 
 ---
 
 ### 🟡 DEBUG da rimuovere — `inc/demo-switcher.php`
 
-**File:** `inc/demo-switcher.php`
+**File:** `inc/demo-switcher.php`  
 **Problema:** Contiene commenti HTML di debug attivi:
 - `<!-- DRW SWITCHER HOOK FIRED -->`
 - `<!-- DRW SWITCHER DISABLED -->`
-- `<!-- DRW SWITCHER ENABLED -->`
-**Azione richiesta:** Rimuovere tutti i commenti HTML di debug prima di v1.0 o qualsiasi consegna cliente.
+- `<!-- DRW SWITCHER ENABLED -->`  
+**Azione richiesta:** Rimuovere tutti i commenti HTML di debug prima di v1.0 o qualsiasi consegna cliente.  
 **Priorità:** 🟡 Media — non impatta funzionalità ma espone dettagli implementativi nel sorgente HTML.
 
 ---
@@ -577,6 +617,7 @@ Caricare sempre condizionalmente via `inc/enqueue.php`:
 | Task | Priorità | File coinvolti | Note |
 |------|----------|----------------|------|
 | **Fix slug hardcoded in taxonomies.php** | 🔴 Alta | `inc/taxonomies.php` | Usare `DRW_CPT_PROFESSIONALS` e `DRW_CPT_CASES` — vedere TODO-CLAUDE |
+| **Gestione accesso diretto single-testimonianza** | 🔴 Alta | `single-testimonianza.php` | Redirect 301 o noindex — vedere TODO-CLAUDE |
 | Estrai CSS inline Divi 5 | 🔴 CRITICO | — | Prerequisito per architettura variabili |
 | Definire campo ACF `_drw_ruolo` per avvocati | 🟡 Media | `inc/options.php` + `inc/schema.php` | Sblocca `jobTitle` nel markup Person |
 | Definire campi ACF per CPT Sedi | 🟡 Media | `inc/options.php` + `inc/schema.php` | Sblocca NAP sedi nel LegalService |
@@ -615,6 +656,6 @@ Caricare sempre condizionalmente via `inc/enqueue.php`:
 
 ---
 
-*Fotografia stato: 3 maggio 2026 — v1.2*
-*File analizzati in questa versione: `inc/schema.php`, `inc/taxonomies.php`, `inc/testimonianze-template.php`, `inc/shortcodes-testimonianze.php`, `inc/custom-post-types.php` (ri-analizzato), directory listing `inc/` completa*
+*Fotografia stato: 3 maggio 2026 — v1.3*  
+*File analizzati in questa versione: directory `inc/` confermata (10 file, nessun extra), `inc/custom-post-types.php` analisi codice sorgente completa, nuovo TODO-CLAUDE `single-testimonianza.php` accesso diretto*  
 *Autori: Luigi + Perplexity AI*
