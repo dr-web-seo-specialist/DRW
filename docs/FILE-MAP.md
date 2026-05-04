@@ -659,3 +659,42 @@ Caricare sempre condizionalmente via `inc/enqueue.php`:
 *Fotografia stato: 3 maggio 2026 — v1.3*  
 *File analizzati in questa versione: directory `inc/` confermata (10 file, nessun extra), `inc/custom-post-types.php` analisi codice sorgente completa, nuovo TODO-CLAUDE `single-testimonianza.php` accesso diretto*  
 *Autori: Luigi + Perplexity AI*
+
+
+---
+
+## DOCUMENTI CORRELATI (docs/)
+
+> Wikilink per Obsidian — aggiungere [[doppia parentesi]] nel vault per attivare il grafo.
+
+| File | Contenuto |
+|---|---|
+| [[FILE-MAP]] | Questo documento — mappa completa child theme |
+| [[css-map]] | Analisi dettagliata cartella /css (6 file) |
+| [[js-map]] | Analisi dettagliata cartella /js (7 file) |
+| [[root-templates-map]] | Analisi dettagliata template root PHP |
+| [[template-parts-map]] | Analisi cartella template-parts/ |
+| [[drive-map]] | Mappa Google Drive — struttura cartelle e documenti |
+
+---
+
+## REPOSITORY GITHUB
+
+- **URL**: https://github.com/dr-web-seo-specialist/DRW
+- **Branch**: `main`
+- **Cartella docs/**: contiene tutte le mappe di questo progetto
+- Aggiornato al: 4 maggio 2026
+
+---
+
+## NOTE SU CARTELLE VUOTE
+
+| Cartella | Stato | Roadmap |
+|---|---|---|
+| `languages/` | VUOTA — predisposta per i18n | Da popolare dopo stabilizzazione stringhe. File atteso: `drw-lawyer-it_IT.po` |
+| `page-templates/` | VUOTA — predisposta per Divi | Da implementare quando layout Divi saranno definiti (post v1.0) |
+
+---
+
+*Fotografia stato: 4 maggio 2026 — v1.4*
+*Aggiornamento v1.4: aggiunta sezione DOCUMENTI CORRELATI (wikilink Obsidian), riferimento GitHub, note cartelle vuote, allineamento data.*
