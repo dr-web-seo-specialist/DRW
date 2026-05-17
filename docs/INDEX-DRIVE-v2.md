@@ -9,6 +9,27 @@
 
 ---
 
+## GERARCHIA URGENZA PROGETTI — 17 maggio 2026
+
+> Aggiornata sulla base della chat del 17/05/2026. Rivedere dopo ogni sessione di lavoro.
+
+| Priorità | Progetto | Note |
+|---|---|---|
+| 🔴 CRITICA | Template Dr.Web – completamento | Orizzonte 1-2 mesi. Asset principale. |
+| 🔴 CRITICA | SuperMario – climatizzatori | Stagionale: estate = ora. Primo cliente verticale. |
+| 🟠 ALTA | Sito Dr.Web multipage + e-commerce | Prerequisito per vendere il template. |
+| 🟠 ALTA | SuperMario – Fase 0 GSC + Matomo | Già promessa al cliente. Da avviare subito. |
+| 🟡 MEDIA | SuperMario – caldaie | Post-audit backend. Non stagionale urgente. |
+| 🟡 MEDIA | SuperMario – hub aziendamultiservice.it | Dipende da completamento verticale caldaie/clima. |
+| 🟡 MEDIA | Abil Assistance | Scope da chiarire prima di procedere. |
+| 🟢 BASSA | Template – varianti commercialisti/notai/CDL | Post-completamento template avvocati. |
+| 🟢 BASSA | TSRM – proposta multisito | Proposta da formalizzare. |
+| 🟢 BASSA | ATV Milano – proposta | Contatto da riprendere post-23 maggio 2026. |
+| ⚪ FUTURA | Template multisito premium internazionale | Visione a lungo termine. |
+
+---
+
+
 ## COME USARE QUESTO INDEX
 
 1. **Prima di qualsiasi modifica architettuale** → Consulta `00_MASTER`
