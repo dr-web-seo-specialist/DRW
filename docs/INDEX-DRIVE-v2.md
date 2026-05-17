@@ -344,3 +344,59 @@ LAVORO dr web/
 *Prossimo aggiornamento: dopo setup Obsidian e prima sessione nuova chat*
 
 > 📌 **WIKILINK OBSIDIAN**: `[[INDEX-DRIVE-v2]]` `[[FILE-MAP]]` `[[drive-map]]` `[[css-map]]` `[[js-map]]` `[[root-templates-map]]` `[[template-parts-map]]`
+
+
+---
+
+## CARTELLA CLIENTI (nuova — 17 maggio 2026)
+
+> Cartella parallela a `template avvocati/` nella root del Drive Dr.Web.
+> Contiene tutti i progetti cliente indipendentemente dal verticale del template utilizzato.
+
+📁 **Clienti**
+https://drive.google.com/open?id=1qZpKy3V9dxx77zWB2YidnVXce95iugny
+
+---
+
+### 📁 SuperMario24
+https://drive.google.com/open?id=1KBx9s-xFRSgq8SH90TnDS6VELjOFfnaA
+
+Cliente: Mario De Filpo — SuperMario24 (Milano)
+Settore: Servizi tecnici multiservice (climatizzatori, caldaie, fotovoltaico)
+Stato: In trattativa — primo cliente del template verticale idraulico/multiservice
+Avviato: 17 maggio 2026
+
+📄 **2026-05-17 — Comunicazione cliente**
+https://drive.google.com/open?id=1H4Qjbo-YIx1fJkcnl-xpQ4sAQKxM3OpCwaoNBlDAfZY
+Prima comunicazione formale al cliente con piano di lavoro in 3 fasi e tabella opzioni climatizzatori.
+
+📄 **2026-05-17 — Analisi siti preliminare**
+https://drive.google.com/open?id=10LesHxJllAmCSAjqxTnW3CWJnpzaOQoOranMU8VJ6c4
+Analisi tecnica dei siti esistenti: assistenza-caldaie-milano.com e supermario24.it/climatizzatori/milano/
+
+📄 **2026-06 — Preventivo (quando pronto)**
+https://drive.google.com/open?id=1_5GO0262g82v4h9-CaqJ47ecx6cvaM87-BvSTw0pX68
+Preventivo formale — da completare.
+
+---
+
+### 📁 ATV Milano
+https://drive.google.com/open?id=1UO90n0myv2MBXOA32eTuZrSjytQ-7Odk
+
+Cliente: ATV Milano
+Settore: Service audio/video/luci per eventi e congressi
+Stato: Potenziale — contatto da riprendere post-23 maggio 2026
+Realizzazione prevista: da ottobre 2026
+
+---
+
+### 📁 Abil Assistance
+https://drive.google.com/open?id=1nBiLiRWUa7gQcCTF35l4-IXOCi-DX34t
+
+Cliente: Abil Assistance
+Settore: Assistenza
+Stato: Lavoro aperto non completato — decisione pendente (opzione A/B/C entro 31 maggio 2026)
+
+---
+
+*Aggiornamento: 17 maggio 2026 — Perplexity/Comet*
