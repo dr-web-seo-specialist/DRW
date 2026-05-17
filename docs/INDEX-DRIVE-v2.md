@@ -75,6 +75,7 @@ WEBDESIGN DR WEB/lawyer template/
 LAVORO dr web/
 ├── .obsidian/               ← VAULT VECCHIO — non usare
 ├── template avvocati/       ← CARTELLA PRINCIPALE PROGETTO
+├── Clienti/       ← CARTELLA Clienti: comunicazioni, analisi, preventivi, note, memo e documenti utili
 ├── # RIEPILOGO SNAPSHOT — Template Avvocati — 15 Aprile
 ├── Discovery avvocati
 ├── INDEX                    ← questo documento (versione Google Docs)
